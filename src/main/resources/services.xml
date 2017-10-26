@@ -1,0 +1,82 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd"
+       default-lazy-init="false">
+
+
+ <context:property-placeholder location="classpath:application.properties"/>
+
+ <bean id="helloWorld" class="com.company.spring.HelloWorld">
+ 	<property name="message" value="Spring"></property>
+ </bean>
+
+ <bean name="RO, romania" class="com.company.spring.xml.Country" p:country="Romania">
+	<!--  <property name="country" value="Romania"/> -->
+	<property name="id" value="1"/>
+ </bean>
+
+ <bean name="BUH, bucharest" class="com.company.spring.xml.City" c:id="1" c:city="Bucharest" c:country-ref="RO"> 
+	<!--  >
+	<constructor-arg name="id" value="1"/>
+	<constructor-arg name="city" value="Bucharest"/> 
+	
+	<constructor-arg name="country" ref="RO"/>
+	-->
+ </bean>
+ 
+ <bean name="a1" class="com.company.spring.xml.Address" parent="addressData">
+ <!--  	<property name="address" value="Str. nr."/>
+	<property name="address2" value="str. nr."/> 	
+	<property name="city" ref="BUH"/>
+	<property name="id" value="1"/>-->
+ </bean> 
+ 
+  <bean name="addressData" abstract="true">
+ 	<property name="address" value="Str. nr. 123"/>
+	<property name="address2" value="str. nr."/> 	
+	<property name="city" ref="BUH"/>
+	<property name="id" value="1"/>
+ </bean> 
+ 
+ <bean name="c1" class="com.company.spring.xml.Customer">
+ 	<constructor-arg name="id" value="1"/>
+ 	<constructor-arg name="address" ref="a1"/>
+ 	<constructor-arg name="active" value="true"/>
+ 	<constructor-arg name="email" value="a@b.c"/>
+ 	<constructor-arg name="firstName" value="G"/>
+ 	<constructor-arg name="lastName" value="last name"/>
+ </bean>
+ 
+  <bean name="c2" class="com.company.spring.xml.Customer" lazy-init="true">
+ 	<constructor-arg name="id" value="2"/>
+ 	<constructor-arg name="address">
+ 		<bean class="com.company.spring.xml.Address" parent="addressData">
+ 			<property name="id" value="2"/>
+ 			<property name="address" value="str 2"/>
+ 			<property name="address2" value="str2 nr2"/>
+ 			<property name="city" ref="BUH"/>
+ 		</bean>
+ 	</constructor-arg>
+ 	<constructor-arg name="active" value="true"/>
+ 	<constructor-arg name="email" value="${c2.email}"/>
+ 	<constructor-arg name="firstName">
+ 		<value> Fist name value</value>
+ 	</constructor-arg>
+ 	<constructor-arg name="lastName">
+ 		<null/>
+ 	</constructor-arg>
+ </bean>
+ 
+ <alias name="c2" alias="client2"/>
+ 
+ <import resource="classpath:client3.xml"/>
+  <import resource="classpath:collections.xml"/>
+
+</beans>
